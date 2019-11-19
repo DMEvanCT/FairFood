@@ -17,12 +17,11 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Build
-      run: go build -v .
+      run:  GOOS=linux GOARCH=amd64 go build -o fairfood
     
   
     - name: Build and push docker container 
       run: |
-       GOOS=linux GOARCH=amd64 go build -o fairfood
        docker build . -t dmevanct/fairfood:$GITHUB_SHA
        docker push dmevanct/fairfood:$GITHUB_SHA
 
