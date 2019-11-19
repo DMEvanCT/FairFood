@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package WhatKindofFood;
 
 service FoodInMyBelly {
     rpc GetFood(FoodTypeRequest) returns (stream FoodTypeResp) {}
@@ -15,7 +16,7 @@ message FoodTypeRequest {
 
 message FoodTypeResp {
     string foodname = 1;
-    int32 foodprice = 2;
+    float foodprice = 2;
     string fooddesc = 3;
     string vendor = 4;
     string foodloc = 5;

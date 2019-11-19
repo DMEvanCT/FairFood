@@ -1,31 +1,30 @@
 package WhatKindofFood
 
 import (
-	"github.com/DMEvanCT/GoBase/Database"
 	"log"
+	"github.com/DMEvanCT/GoBase/Database"
 )
 
 
-func GetFairFood( FoodType string , stream FoodInMyBelly_GetFoodServer) error {
+func GetFairFood( ftype string, stream FoodInMyBelly_GetFoodServer) error {
 	var FoodName string
 	var FoodLocation string
 	var FoodDesc string
-	var FoodPrice int32
-	var Vendor string
+	var FoodPrice float32
+	var VendorName string
 
 
-
-	db := Database.DatabaseInitAllHost("/etc/dm", "FileService", "FileService.username", "FileService.password", "")
+	db := Database.DBInitSSLHostConfv2("/etc/dm", "FoodService", "FoodService.username", "FoodService.password", "FoodService.host", "FoodService.port")
 
 	// Start the connection the connection to the db
 	fetchmesomefood, err := db.Begin( )
 	if err != nil {
-		log.Fatal("There was an error connecting to the database")
+		log.Fatal("There was an error connecting to the database", err)
 	}
 
 	defer fetchmesomefood.Rollback()
 
-	fmsf, err := fetchmesomefood.Query("SELECT FoodName, FoodLocation, FoodDesc, FoodType, FoodPrice, Vendor FROM fair.fairfood where foodtype = " + FoodType )
+	fmsf, err := fetchmesomefood.Query("SELECT FoodName, FoodLocation, FoodDesc, FoodPrice, VendorName FROM fair.fairfood WHERE FoodType = " +"'" + ftype + "'")
 	if err != nil {
 		log.Println("There was an error with the query ", err )
 	}
@@ -33,7 +32,7 @@ func GetFairFood( FoodType string , stream FoodInMyBelly_GetFoodServer) error {
 	defer fmsf.Close()
 
 	for fmsf.Next() {
-		err := fmsf.Scan(&FoodName, &FoodLocation, &FoodDesc, &FoodType, &FoodPrice, &Vendor)
+		err := fmsf.Scan(&FoodName, &FoodLocation, &FoodDesc, &FoodPrice, &VendorName)
 		if err != nil {
 			log.Println("There was an error with your query during the scan", err)
 		}
@@ -41,9 +40,9 @@ func GetFairFood( FoodType string , stream FoodInMyBelly_GetFoodServer) error {
 			Foodname:             FoodName,
 			Foodprice:            FoodPrice,
 			Fooddesc:             FoodDesc,
-			Vendor:               Vendor,
+			Vendor:               VendorName,
 			Foodloc:              FoodLocation,
-			Foodtype:             FoodType,
+			Foodtype:             ftype,
 			XXX_NoUnkeyedLiteral: struct{}{},
 			XXX_unrecognized:     nil,
 			XXX_sizecache:        0,
