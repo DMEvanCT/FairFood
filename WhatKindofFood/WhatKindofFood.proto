@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+
+service FoodInMyBelly {
+    rpc GetFood(FoodTypeRequest) returns (stream FoodTypeResp) {}
+
+}
+
+
+
+message FoodTypeRequest {
+    string foodtype = 1;
+}
+
+
+message FoodTypeResp {
+    string foodname = 1;
+    int32 foodprice = 2;
+    string fooddesc = 3;
+    string vendor = 4;
+    string foodloc = 5;
+    string foodtype = 6;
+
+
+}
+
