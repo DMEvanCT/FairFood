@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fairfood
+  namespace: fair
+  labels:
+    app: fairfood
+    env: fair
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fairfood
+      env: fair
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      namespace: fair
+      labels:
+        app: fairfood
+        env: fair
+    spec:
+      containers:
+        - name: fairfood
+          image:  dmevanct/fairfood:version1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 50051
+          volumeMounts:
+            - name: fairfoodsecret
+              mountPath: "/etc/dm"
+              readOnly: true
+      volumes:
+        - name: fairfoodsecret
+          secret:
+            secretName: foodservice
