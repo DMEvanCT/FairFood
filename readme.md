@@ -10,6 +10,18 @@ In order to understand the request / return values please see the proto files
 * WhatKindofFood.proto 
 
 
+###To build for ALPINE and build docker container
+```bash 
+GOOS=linux GOARCH=amd64 go build -o fairfood
+docker build . -t (tag)
+```
+
+###To build for local machine to test
+```bash 
+go build ./... -o fairfood
+```
+
+
 
 
 To test on your own 
